@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./finance-ai-backend
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    env_file:
+      - .env
+    ports:
+      - "3000:8000"
+    networks:
+      - broker-backend
+
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    container_name: finance-ai-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBIT_MQ_DEFAULT_USER=guest
+      - RABBIT_MQ_DEFAULT_PASS=guest
+    volumes:
+      - finance-mq:/etc/data
+    networks:
+      - broker-backend
+
+volumes:
+  finance-mq:
+networks:
+  broker-backend:
+    driver: bridge
