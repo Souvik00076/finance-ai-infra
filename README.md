@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="https://github.com/Souvik00076/finance-ai-backend">
-    <img src="./Untitled design.gif" width="800"/><br/>
+    <img src="./design.gif" width="800"/><br/>
     <img src="https://img.shields.io/badge/Visit%20Backend%20Code-Click%20Here-blue?style=for-the-badge"/>
   </a>
 </p>
