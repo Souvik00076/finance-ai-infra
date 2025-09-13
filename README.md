@@ -61,4 +61,3 @@ MONGO_URI="your-mongodb-uri"
 RABBIT_MQ_URL=amqp://guest:guest@rabbitmq:5672
 PORT=8000
 HD_SIG=your-hookdeck-signature
-
