@@ -1,4 +1,4 @@
-![til](./design.gif)
+![High Level Design](https://github.com/Souvik00076/my-all-gifs/blob/master/design.gif)
 <p align="center">
   <a href="https://github.com/Souvik00076/finance-ai-backend">
     <img src="https://img.shields.io/badge/Visit%20Backend%20Code-Click%20Here-blue?style=for-the-badge"/>
