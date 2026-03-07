@@ -58,7 +58,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-./spendly-29e08-firebase-adminsdk-fbsvc-584701a6d6.json
+spendly-29e08-firebase-adminsdk-fbsvc-584701a6d6.json
+*.json.bak
 # IDE
 .idea/
 .vscode/
