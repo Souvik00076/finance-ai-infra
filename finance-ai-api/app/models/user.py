@@ -20,6 +20,8 @@ class User(Document):
     email_verified: bool = False
     is_active: bool = True
     is_superuser: bool = False
+    phone: Optional[str] = None
+    is_phone_linked: bool = False
     created_at: datetime = Field(default_factory=_utcnow)
     updated_at: datetime = Field(default_factory=_utcnow)
 

@@ -23,6 +23,9 @@ python-multipart>=0.0.6
 # Email
 resend>=2.23.0
 
+# SMS/Phone
+twilio>=9.10.2
+
 # Development
 python-dotenv>=1.0.0
 

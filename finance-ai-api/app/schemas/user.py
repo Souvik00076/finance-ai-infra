@@ -30,6 +30,8 @@ class UserResponse(BaseModel):
     picture: Optional[str] = None
     provider: str = "email"
     is_active: bool = True
+    phone: Optional[str] = None
+    is_phone_linked: bool = False
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
