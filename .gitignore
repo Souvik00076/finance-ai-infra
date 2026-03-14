@@ -1,2 +1,10 @@
+finance-ai-api/
 finance-ai-backend/
+finance-ai-frontend/
+spendly-frontend/
+spendly-backend/
+spendly-api/
+.env.*
 .env
+.scripts
+firebase.json

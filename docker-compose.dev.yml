@@ -1,0 +1,103 @@
+services:
+  broker:
+    image: rabbitmq:4.1-management
+    container_name: spendly-broker-dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env.broker
+    volumes:
+      - broker-data:/var/lib/rabbitmq
+    networks:
+      - broker-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  backend:
+    build:
+      context: ./spendly-backend
+      dockerfile: Dockerfile.dev
+    container_name: spendly-backend-dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.backend
+    environment:
+      - PORT=8000
+    volumes:
+      - ./spendly-backend/index.ts:/app/index.ts
+      - ./spendly-backend/src:/app/src
+      - ./spendly-backend/tsconfig.json:/app/tsconfig.json
+    working_dir: /app
+    command: ["bun", "--watch", "index.ts"]
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - broker-network
+      - api-network
+
+  api:
+    build:
+      context: ./spendly-api
+      dockerfile: Dockerfile.dev
+    container_name: spendly-api-dev
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env.api
+    environment:
+      - FIREBASE_CREDENTIALS_PATH=/app/firebase.json
+    volumes:
+      - ./spendly-api/app:/app/app
+      - ./firebase.json:/app/firebase.json:ro
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002", "--reload", "--reload-dir", "/app/app"]
+    depends_on:
+      backend:
+        condition: service_started
+    networks:
+      - api-network
+
+  frontend:
+    build:
+      context: ./spendly-frontend
+      dockerfile: Dockerfile.dev
+    container_name: spendly-frontend-dev
+    ports:
+      - "3001:3000"
+    env_file:
+      - .env.frontend
+    environment:
+      - NEXT_PUBLIC_APP_ENV=local
+    volumes:
+      - ./spendly-frontend/app:/app/app
+      - ./spendly-frontend/components:/app/components
+      - ./spendly-frontend/contexts:/app/contexts
+      - ./spendly-frontend/lib:/app/lib
+      - ./spendly-frontend/services:/app/services
+      - ./spendly-frontend/public:/app/public
+      - ./spendly-frontend/next.config.ts:/app/next.config.ts
+      - ./spendly-frontend/tsconfig.json:/app/tsconfig.json
+      - ./spendly-frontend/postcss.config.mjs:/app/postcss.config.mjs
+      - ./spendly-frontend/components.json:/app/components.json
+    working_dir: /app
+    command: ["npm", "run", "dev"]
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - api-network
+
+volumes:
+  broker-data:
+
+networks:
+  broker-network:
+    driver: bridge
+  api-network:
+    driver: bridge

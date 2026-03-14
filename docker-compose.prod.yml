@@ -1,0 +1,72 @@
+services:
+  broker:
+    image: rabbitmq:4.1-management
+    container_name: spendly-broker-prod
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env.broker
+    volumes:
+      - broker-data:/var/lib/rabbitmq
+    networks:
+      - broker-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  backend:
+    image: spendly-backend
+    container_name: spendly-backend-prod
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.backend
+    environment:
+      - PORT=8000
+    depends_on:
+      broker:
+        condition: service_healthy
+    networks:
+      - broker-network
+      - api-network
+
+  api:
+    image: spendly-api
+    container_name: spendly-api-prod
+    ports:
+      - "8002:8002"
+    env_file:
+      - .env.api
+    environment:
+      - FIREBASE_CREDENTIALS_PATH=/app/firebase.json
+    volumes:
+      - ./firebase.json:/app/firebase.json:ro
+    depends_on:
+      - backend
+    networks:
+      - api-network
+
+  frontend:
+    image: spendly-frontend
+    container_name: spendly-frontend-prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.frontend
+    depends_on:
+      - api
+    networks:
+      - api-network
+
+volumes:
+  broker-data:
+
+networks:
+  broker-network:
+    driver: bridge
+  api-network:
+    driver: bridge
