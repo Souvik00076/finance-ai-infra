@@ -1,13 +1,13 @@
 ![High Level Design](https://github.com/Souvik00076/my-all-gifs/blob/master/design.gif)
 <p align="center">
-  <a href="https://github.com/Souvik00076/finance-ai-backend">
+ <a href="https://github.com/Souvik00076/finance-ai-backend">
     <img src="https://img.shields.io/badge/Visit%20Backend%20Code-Click%20Here-blue?style=for-the-badge"/>
   </a>
   <a href="https://github.com/Souvik00076/finance-ai-frontend">
-    <img src="https://img.shields.io/badge/Visit%Frontend%20Code-Click%20Here-blue?style=for-the-badge"/>
+    <img src="https://img.shields.io/badge/Visit%20Frontend%20Code-Click%20Here-blue?style=for-the-badge"/>
   </a>
   <a href="https://github.com/Souvik00076/finance-ai-api">
-    <img src="https://img.shields.io/badge/Visit%API%20Code-Click%20Here-blue?style=for-the-badge"/>
+    <img src="https://img.shields.io/badge/Visit%20API%20Code-Click%20Here-blue?style=for-the-badge"/>
   </a>
 </p>
 
