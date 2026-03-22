@@ -2,11 +2,14 @@ services:
   broker:
     image: rabbitmq:4.1-management
     container_name: spendly-broker-prod
+    user: root
     ports:
       - "5672:5672"
       - "15672:15672"
     env_file:
       - .env.broker
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
     # volumes:
     #   - broker-data:/var/lib/rabbitmq
     networks:
