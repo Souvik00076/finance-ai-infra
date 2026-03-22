@@ -7,8 +7,8 @@ services:
       - "15672:15672"
     env_file:
       - .env.broker
-    volumes:
-      - broker-data:/var/lib/rabbitmq
+    # volumes:
+    #   - broker-data:/var/lib/rabbitmq
     networks:
       - broker-network
     healthcheck:
@@ -58,8 +58,8 @@ services:
       - api-network
       - shared
 
-volumes:
-  broker-data:
+# volumes:
+#   broker-data:
 
 networks:
   broker-network:
