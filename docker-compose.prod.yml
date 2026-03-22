@@ -21,8 +21,6 @@ services:
   backend:
     image: spendly-backend
     container_name: spendly-backend-prod
-    ports:
-      - "8000:8000"
     env_file:
       - .env.backend
     environment:
@@ -33,12 +31,11 @@ services:
     networks:
       - broker-network
       - api-network
+      - shared
 
   api:
     image: spendly-api
     container_name: spendly-api-prod
-    ports:
-      - "8002:8002"
     env_file:
       - .env.api
     environment:
@@ -49,39 +46,17 @@ services:
       - backend
     networks:
       - api-network
-
+      - shared
   frontend:
     image: spendly-frontend
     container_name: spendly-frontend-prod
-    ports:
-      - "3000:3000"
     env_file:
       - .env.frontend
     depends_on:
       - api
     networks:
       - api-network
-
-  nginx:
-    image: nginx:alpine
-    container_name: spendly-nginx-prod
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-
-    depends_on:
-      frontend:
-        condition: service_started
-      api:
-        condition: service_started
-      backend:
-        condition: service_started
-    networks:
-      - api-network
-    restart: unless-stopped
+      - shared
 
 volumes:
   broker-data:
@@ -91,3 +66,5 @@ networks:
     driver: bridge
   api-network:
     driver: bridge
+  shared:
+    external: true
