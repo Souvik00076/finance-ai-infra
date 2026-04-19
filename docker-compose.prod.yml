@@ -19,6 +19,25 @@ services:
       retries: 5
       start_period: 60s
 
+  redis:
+    image: redis:7-alpine
+    container_name: spendly-redis-prod
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env.broker
+    command: >
+      sh -c 'redis-server --requirepass "$$REDIS_PASSWORD" --user "$$REDIS_USER" on ">$$REDIS_PASSWORD" "~*" "+@all"'
+    volumes:
+      - redis-data:/data
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     image: spendly-backend
     container_name: spendly-backend-prod
@@ -28,6 +47,8 @@ services:
       - PORT=8000
     depends_on:
       broker:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - broker-network
@@ -44,7 +65,8 @@ services:
     volumes:
       - ./firebase.json:/app/firebase.json:ro
     depends_on:
-      - backend
+      redis:
+        condition: service_healthy
     networks:
       - api-network
       - shared
@@ -61,6 +83,7 @@ services:
 
 volumes:
   broker-data:
+  redis-data:
 
 networks:
   broker-network:

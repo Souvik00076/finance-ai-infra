@@ -60,8 +60,30 @@ services:
     depends_on:
       backend:
         condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - api-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: spendly-redis-dev
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env.broker
+    command: >
+      sh -c 'redis-server --requirepass "$$REDIS_PASSWORD" --user "$$REDIS_USER" on ">$$REDIS_PASSWORD" "~*" "+@all"'
+    volumes:
+      - redis-data:/data
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
   frontend:
     build:
@@ -95,6 +117,7 @@ services:
 
 volumes:
   broker-data:
+  redis-data:
 
 networks:
   broker-network:
