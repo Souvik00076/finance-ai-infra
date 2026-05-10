@@ -75,6 +75,8 @@ services:
     container_name: spendly-frontend-prod
     env_file:
       - .env.frontend
+    environment:
+      - PORT=3005
     depends_on:
       - api
     networks:
