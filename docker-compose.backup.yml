@@ -1,0 +1,37 @@
+# MongoDB Atlas -> Google Drive backup, every 6 hours.
+# Not tied to dev/prod: all config comes from the environment (shell, .env, or Dokploy env).
+#
+#   docker compose -f docker-compose.backup.yml up -d --build
+#   docker compose -f docker-compose.backup.yml run --rm --entrypoint backup.sh mongo-backup   # one-off backup
+#
+# Required env:
+#   MONGO_URI          mongodb+srv://user:pass@cluster.../  (Atlas connection string)
+#   GDRIVE_TOKEN       JSON token from: rclone authorize "drive"
+# Optional env:
+#   MONGO_DB_NAME      dump only this database (default: all databases the user can read)
+#   GDRIVE_FOLDER_ID   Drive folder ID to put the backup in (default: My Drive root)
+#   GDRIVE_CLIENT_ID / GDRIVE_CLIENT_SECRET   your own Google OAuth client (default: rclone's)
+#   CRON_SCHEDULE      default "0 */6 * * *"
+#   RUN_ON_STARTUP     default "true"
+#   TZ                 default "Asia/Kolkata"
+
+name: spendly-backup
+
+services:
+  mongo-backup:
+    build:
+      context: ./backup
+    image: spendly-mongo-backup
+    container_name: spendly-mongo-backup
+    restart: unless-stopped
+    environment:
+      MONGO_URI: ${MONGO_URI:?MONGO_URI is required}
+      GDRIVE_TOKEN: ${GDRIVE_TOKEN:?GDRIVE_TOKEN is required}
+      MONGO_DB_NAME: ${MONGO_DB_NAME:-}
+      GDRIVE_FOLDER_ID: ${GDRIVE_FOLDER_ID:-}
+      GDRIVE_CLIENT_ID: ${GDRIVE_CLIENT_ID:-}
+      GDRIVE_CLIENT_SECRET: ${GDRIVE_CLIENT_SECRET:-}
+      BACKUP_NAME: backup_souvik_finance.gz
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 */6 * * *}
+      RUN_ON_STARTUP: ${RUN_ON_STARTUP:-true}
+      TZ: ${TZ:-Asia/Kolkata}
