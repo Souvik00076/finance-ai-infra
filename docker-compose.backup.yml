@@ -1,4 +1,4 @@
-# MongoDB Atlas -> Google Drive backup, every 6 hours.
+# MongoDB Atlas -> Google Drive backup, every 24 hours.
 # Not tied to dev/prod: all config comes from the environment (shell, .env, or Dokploy env).
 #
 #   docker compose -f docker-compose.backup.yml up -d --build
@@ -11,7 +11,7 @@
 #   MONGO_DB_NAME      dump only this database (default: all databases the user can read)
 #   GDRIVE_FOLDER_ID   Drive folder ID to put the backup in (default: My Drive root)
 #   GDRIVE_CLIENT_ID / GDRIVE_CLIENT_SECRET   your own Google OAuth client (default: rclone's)
-#   CRON_SCHEDULE      default "0 */6 * * *"
+#   CRON_SCHEDULE      default "0 0 * * *"
 #   RUN_ON_STARTUP     default "true"
 #   TZ                 default "Asia/Kolkata"
 
@@ -32,6 +32,6 @@ services:
       GDRIVE_CLIENT_ID: ${GDRIVE_CLIENT_ID:-}
       GDRIVE_CLIENT_SECRET: ${GDRIVE_CLIENT_SECRET:-}
       BACKUP_NAME: backup_souvik_finance.gz
-      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 */6 * * *}
+      CRON_SCHEDULE: ${CRON_SCHEDULE:-0 0 * * *}
       RUN_ON_STARTUP: ${RUN_ON_STARTUP:-true}
       TZ: ${TZ:-Asia/Kolkata}

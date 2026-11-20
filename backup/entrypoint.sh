@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Default: every 6 hours, on the hour (00:00, 06:00, 12:00, 18:00 in TZ).
-CRON_SCHEDULE="${CRON_SCHEDULE:-0 */6 * * *}"
+# Default: every 24 hours, at midnight (00:00 in TZ).
+CRON_SCHEDULE="${CRON_SCHEDULE:-0 0 * * *}"
 
 if [ "${RUN_ON_STARTUP:-true}" = "true" ]; then
   echo "Running initial backup on startup..."
